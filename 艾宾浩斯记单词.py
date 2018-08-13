@@ -1,5 +1,5 @@
 #-*- coding=utf-8 -*-#
-import datetime,re
+import datetime,re,random
 try:
     from wordslist import wordslist
 except ModuleNotFoundError:#不存在则新建存档
@@ -11,8 +11,9 @@ except ModuleNotFoundError:#不存在则新建存档
 timelist = [1,2,4,7,15,31,36,41]
 
 def learn(x):
-    value = [i for i in wordslist.items() if x in i[1]]
-    if value != []:#如果输入内容已存在
+    value = ','.join([i[1] for i in wordslist.items()])
+    Vexist = re.findall(r'[^,]+',value)
+    if x in Vexist:#如果输入内容已存在
         print('%s已存在复习列表中'%x)
     else:
         data = []
@@ -41,7 +42,9 @@ def save():
         
 def check(x):
     value = [i[1] for i in wordslist.items() if x in i[0]]
-    print('%s'%(','.join(value)))
+    l = ','.join(value).split(',')
+    random.shuffle(l)
+    print('%s'%('\n'.join(l)))
 
 def dele(x):
     key = [i[0] for i in wordslist.items() if x in i[1]][0]
@@ -52,7 +55,7 @@ def dele(x):
     save()
 
 while True:
-    print('1.新增 2.复习 3.删除 4.退出')
+    print('\n1.新增 2.复习 3.删除 4.退出')
     n = int(input())
     if n == 1:
         print('新增内容:(q/退出循环)')
@@ -60,6 +63,8 @@ while True:
             x = str(input())
             if x == 'q':
                 break
+            elif x == '':
+                print('无效内容')
             else:
                 learn(x)
     elif n == 2:
